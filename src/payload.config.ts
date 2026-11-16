@@ -8,6 +8,8 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { News } from './collections/News'
+import { ArticleAttachments } from './collections/ArticleAttachments'
+import { Articles } from './collections/Articles'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -19,7 +21,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, News],
+  collections: [Users, Media, ArticleAttachments, Articles, News],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -31,5 +33,11 @@ export default buildConfig({
     },
   }),
   sharp,
+  jobs: {
+    // Scheduled publishing is a Payload job. A long-running app process (the
+    // Compose app service or `pnpm dev`) runs this queue every minute. Serverless
+    // deployments need an external cron that calls /api/payload-jobs/run.
+    autoRun: [{ cron: '* * * * *', queue: 'default' }],
+  },
   plugins: [],
 })
