@@ -1,0 +1,36 @@
+# Dependencies (installed inside the container)
+node_modules
+.pnp
+.pnp.js
+.pnpm-store
+
+# Next.js build output
+.next
+out
+build
+
+# Version control and local environment
+.git
+.env
+.env.*
+!.env.example
+
+# Uploaded media lives in a named volume
+media
+
+# Tests and reports
+coverage
+test-results
+playwright-report
+blob-report
+playwright/.cache
+
+# Editor, agent, and OS noise
+.vscode
+.idea
+.agents
+.openspec
+openspec
+.DS_Store
+*.log
+*.tsbuildinfo

@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-payload}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-payload}
+      POSTGRES_DB: ${POSTGRES_DB:-payload}
+    ports:
+      - '127.0.0.1:${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  app:
+    image: node:22.23.5-alpine
+    working_dir: /app
+    ports:
+      - '${APP_PORT:-3000}:3000'
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      - next_cache:/app/.next
+      - media:/app/media
+    environment:
+      # Compose runs the app next to the database, so the host is the service name.
+      DATABASE_URL: postgres://${POSTGRES_USER:-payload}:${POSTGRES_PASSWORD:-payload}@db:5432/${POSTGRES_DB:-payload}
+    env_file:
+      - .env
+    command: >-
+      sh -c 'for d in /app/node_modules /app/.next /app/media; do
+      [ "$$(stat -c %u $$d)" = "$$(id -u node)" ] || chown -R node:node $$d; done &&
+      corepack enable &&
+      exec su node -c "pnpm install --frozen-lockfile && pnpm dev"'
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  media:
+  node_modules:
+  next_cache:
