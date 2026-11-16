@@ -8,7 +8,7 @@ This project serves as a proof of concept for a content-first architecture where
 
 - **News** — a collection of published news items with images, dates, and rich text.
 - **Articles** — longer-form content with a separate model and layout: byline, hero image, tags, an ordered set of typed content blocks, a derived table of contents, reading time, downloadable attachments, related articles, and an optional video with a resilient preview.
-- **Service Points** — a collection of dealer/service locations rendered as markers on a map page.
+- **Service Points** — a collection of dealer/service locations rendered as markers on a read-only MapLibre map page.
 - **Equipment Listings** — sale announcements for used machinery, including photos, price, and condition.
 - **Read-only public frontend** — no forms, no edit buttons, no direct API writes from the client.
 - **Admin-only editing** — all create, update, and delete operations require an authenticated administrator.
@@ -22,7 +22,7 @@ This project serves as a proof of concept for a content-first architecture where
 | CMS / Backend | Payload CMS 3 (TypeScript) |
 | Frontend | Next.js (App Router), server-side rendering |
 | Database | PostgreSQL |
-| Map Integration | ? API |
+| Map Integration | MapLibre GL JS |
 | Containerization | Docker Compose |
 | Package Manager | pnpm |
 
@@ -32,8 +32,9 @@ This project serves as a proof of concept for a content-first architecture where
 |---|---|---|
 | `/news`, `/news/[slug]` | `news` | Short news items. |
 | `/articles`, `/articles/[slug]` | `articles` | Long-form articles. |
+| `/service-points` | `service-points` | Read-only map of dealers, service centres, and warehouses. |
 
-The two sections use separate URL namespaces and separate collections. The same slug can exist in both, and `/articles/<slug>` and `/news/<slug>` always resolve to their own collection.
+News and articles use separate URL namespaces and separate collections. The same slug can exist in both, and `/articles/<slug>` and `/news/<slug>` always resolve to their own collection. Service points have no per-item route: the map page lists every point and shows its details in a marker popup.
 
 ## Articles
 
@@ -119,8 +120,13 @@ This is enforced at the Payload access-control layer and verified during develop
 | `DATABASE_URL` | PostgreSQL connection string. |
 | `PAYLOAD_SECRET` | Payload signing secret. |
 | `NEXT_PUBLIC_SERVER_URL` | Public origin used for article canonical, Open Graph, and Twitter URLs. |
+| `NEXT_PUBLIC_MAP_STYLE_URL` | MapLibre style URL for `/service-points`. |
 
 `NEXT_PUBLIC_SERVER_URL` falls back to `http://localhost:3000` when unset or malformed, so the local build still works without it. Set it to the real public origin in any deployment so absolute metadata URLs point at the deployed site. The frontend layout sets `metadataBase` from the same value.
+
+`NEXT_PUBLIC_MAP_STYLE_URL` defaults to the bundled `/map-style.json` demo style, which draws Natural Earth country geometry from `/world-countries.geojson` and needs no API key or tile service. Replace it with any MapLibre-compatible style URL for a deployment; the production basemap provider remains a deployment decision. MapLibre renders the markers and popups on the client, and the same point details are server-rendered in a list below the map.
+
+If the map is blank in development, confirm `public/maplibre-gl-worker.mjs` exists; `pnpm install`, `pnpm dev`, and `pnpm build` generate it from `maplibre-gl`.
 
 ## License
 
