@@ -6,6 +6,10 @@ context: |
   The public frontend is strictly read-only: no forms, no client-side writes, no edit or delete actions.
   All content mutations go through the authenticated Payload admin; collection access control is the enforcement point, never UI-only guards.
   No map provider is chosen yet; do not assume one.
+  Local verification must use the committed local basemap
+  (`public/map-style.json` plus `public/world-countries.geojson`); e2e tests must
+  not depend on an external map style or tile service. External styles are
+  production configuration.
   Geospatial fields need the PostGIS extension on PostgreSQL.
   Stay compatible with the Node engines in package.json and with PostgreSQL; no MongoDB-specific features.
   Write all OpenSpec artifacts in English.
@@ -18,10 +22,12 @@ rules:
     - State whether each content requirement is read-only for unauthenticated users.
   design:
     - Do not choose a map provider; list it under Open Questions until one is decided.
+    - "When a design adds a browser-only library, name the client-only boundary, the worker/vendor-asset copy step, and the difference between headless and real-browser visual checks."
     - In Payload 3.93, `slugField()`'s admin input starts locked and its hook does not fill the slug before required validation; when a design uses it, plan an explicit slug or a `beforeValidate` guard.
   tasks:
     - Use one task group per collection or public section touched, not one per layer.
     - Use positional path filters, not `--`, in verification commands (`pnpm test:e2e tests/e2e/<file>.spec.ts`), and state prerequisites such as the Playwright browser install and the dev-server restart.
+    - "For map or browser-only work, state the local style/worker prerequisites and keep e2e independent of external tile providers."
 
 operations:
   apply:
@@ -40,6 +46,11 @@ operations:
       - "Upload relationship fields have no `input[type=file]`; select with `.upload__listToggler` → `.drawer__content tbody tr` → `button.default-cell__first-cell` and assert the filename link."
       - "Host-run uploads land in `./media` while the Compose app serves the `media` named volume; upload through the running app's REST API when a test or screenshot must render the file."
       - "Keep Vitest `fileParallelism: false` and Playwright `workers: 1`; the suites share one database and race on Payload schema pushes and published rows."
+      - "Run one-off Payload scripts with `pnpm payload run <script.ts>`; a bare `tsx` process can stay alive on the `jobs.autoRun` cron after the work is done."
+      - "For MapLibre, import the namespace, register `/maplibre-gl-worker.mjs` with `setWorkerUrl`, and assert canvas, markers, and popups before debugging headless pixels."
+      - "If Playwright reports port 3000 in use and starts 3001, or the app returns 500, restart the Compose app and wait for 200; never `pkill -f 'next dev'`."
+      - "Fetch large external styles or fixtures with `curl --compressed`; uncompressed responses here truncate near 25 KB."
+      - "Stop after two failed attempts at a headless-only visual difference; record the limitation and verify in a real browser."
   archive:
     guidance:
       - Run openspec validate before archiving.
