@@ -1,0 +1,151 @@
+.page {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.header h1 {
+  margin: 0 0 0.5rem;
+}
+
+.header p {
+  margin: 0;
+  color: #4b5563;
+}
+
+.mapFrame {
+  width: 100%;
+  height: clamp(18rem, 55vh, 32rem);
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background: #f3f4f6;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+.mapLoading {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: clamp(18rem, 55vh, 32rem);
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.mapError {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid #fca5a5;
+  border-radius: 0.5rem;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.marker {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  background: #1d4ed8;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.marker:hover {
+  background: #1e40af;
+}
+
+.marker:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+.popupContent {
+  max-width: min(18rem, calc(100vw - 3rem));
+  overflow-wrap: anywhere;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.popupContent strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.popupContent p {
+  margin: 0.2rem 0;
+}
+
+.contactLabel {
+  font-weight: 600;
+}
+
+.empty {
+  margin: 0;
+  padding: 1.5rem;
+  border: 1px dashed #d1d5db;
+  border-radius: 0.5rem;
+  background: #f9fafb;
+  color: #4b5563;
+}
+
+.listHeading {
+  margin: 2rem 0 1rem;
+  font-size: 1.25rem;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+  margin: 0;
+}
+
+.card {
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+.card h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.05rem;
+}
+
+.type {
+  margin: 0 0 0.5rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.address {
+  margin: 0.5rem 0;
+  white-space: pre-line;
+}
+
+.contactList {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contactList li {
+  margin-top: 0.2rem;
+  overflow-wrap: anywhere;
+}
+
+.contactList a {
+  color: #1d4ed8;
+}

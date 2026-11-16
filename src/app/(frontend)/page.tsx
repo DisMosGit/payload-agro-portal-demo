@@ -12,6 +12,9 @@ export default function HomePage() {
         <Link href="/articles">Read the articles</Link>
       </p>
       <p>
+        <Link href="/service-points">Find a service point</Link>
+      </p>
+      <p>
         <Link href="/admin">Open the admin panel</Link>
       </p>
     </div>

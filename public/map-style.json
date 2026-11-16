@@ -1,0 +1,30 @@
+{
+  "version": 8,
+  "name": "Service points demo basemap",
+  "sources": {
+    "countries": {
+      "type": "geojson",
+      "data": "/world-countries.geojson",
+      "attribution": "Natural Earth"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": { "background-color": "#d8ecf7" }
+    },
+    {
+      "id": "countries-fill",
+      "type": "fill",
+      "source": "countries",
+      "paint": { "fill-color": "#f4f1e8" }
+    },
+    {
+      "id": "countries-border",
+      "type": "line",
+      "source": "countries",
+      "paint": { "line-color": "#9aa7b1", "line-width": 0.8 }
+    }
+  ]
+}
