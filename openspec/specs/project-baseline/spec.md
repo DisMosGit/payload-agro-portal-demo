@@ -13,7 +13,7 @@ The project SHALL ship only collections that belong to the product: the authenti
 #### Scenario: Collection surface is minimal
 
 - **WHEN** the Payload configuration is loaded
-- **THEN** `users`, `media`, and `news` are registered, with no example collection and no seeded documents
+- **THEN** `users`, `media`, `news`, `articles`, and `article-attachments` are registered, with no example collection and no seeded documents
 
 #### Scenario: Demo route is removed
 
