@@ -1,0 +1,33 @@
+schema: spec-driven
+
+context: |
+  Stack: Payload CMS 3 on the Next.js App Router, PostgreSQL, TypeScript.
+  Domain: demo content site with four public sections: news, articles, service points on a map, equipment listings.
+  The public frontend is strictly read-only: no forms, no client-side writes, no edit or delete actions.
+  All content mutations go through the authenticated Payload admin; collection access control is the enforcement point, never UI-only guards.
+  No map provider is chosen yet; do not assume one.
+  Geospatial fields need the PostGIS extension on PostgreSQL.
+  Stay compatible with the Node engines in package.json and with PostgreSQL; no MongoDB-specific features.
+  Write all OpenSpec artifacts in English.
+
+rules:
+  proposal:
+    - Name the public sections the change touches, or state that it touches none.
+    - State what is out of scope.
+  specs:
+    - State whether each content requirement is read-only for unauthenticated users.
+  design:
+    - Do not choose a map provider; list it under Open Questions until one is decided.
+  tasks:
+    - Use one task group per collection or public section touched, not one per layer.
+
+operations:
+  apply:
+    guidance:
+      - Regenerate payload-types.ts and importMap.js after collection or admin-component changes; never hand-edit them.
+      - Keep tsc --noEmit, pnpm lint, and pnpm test:int green for collection or access-control changes.
+      - Run pnpm test:e2e for frontend changes.
+  archive:
+    guidance:
+      - Run openspec validate before archiving.
+      - Confirm no change adds a write path to the public frontend or weakens admin-only mutation access.
