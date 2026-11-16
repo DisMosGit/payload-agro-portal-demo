@@ -72,6 +72,7 @@ export interface Config {
     'article-attachments': ArticleAttachment;
     articles: Article;
     news: News;
+    'service-points': ServicePoint;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -85,6 +86,7 @@ export interface Config {
     'article-attachments': ArticleAttachmentsSelect<false> | ArticleAttachmentsSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
+    'service-points': ServicePointsSelect<false> | ServicePointsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -421,6 +423,24 @@ export interface News {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "service-points".
+ */
+export interface ServicePoint {
+  id: number;
+  name: string;
+  type?: ('dealer' | 'service-centre' | 'warehouse') | null;
+  latitude: number;
+  longitude: number;
+  address?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  website?: string | null;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -554,6 +574,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'news';
         value: number | News;
+      } | null)
+    | ({
+        relationTo: 'service-points';
+        value: number | ServicePoint;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -809,6 +833,23 @@ export interface NewsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "service-points_select".
+ */
+export interface ServicePointsSelect<T extends boolean = true> {
+  name?: T;
+  type?: T;
+  latitude?: T;
+  longitude?: T;
+  address?: T;
+  phone?: T;
+  email?: T;
+  website?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
