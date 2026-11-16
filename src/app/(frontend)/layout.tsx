@@ -1,6 +1,10 @@
+import type { Metadata } from 'next'
 import React from 'react'
 
-export const metadata = {
+import { getSiteURL } from '@/lib/site'
+
+export const metadata: Metadata = {
+  metadataBase: new URL(getSiteURL()),
   description: 'Public front end for a Payload CMS content site.',
   title: 'Demo Site',
 }
