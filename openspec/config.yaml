@@ -32,7 +32,13 @@ operations:
       - Install the Playwright browser once with `pnpm exec playwright install chromium`.
       - Restart the dev server after changing `payload.config.ts` or a collection config; Next hot reload does not re-register collections.
       - Run one suite with a positional path such as `pnpm test:e2e tests/e2e/<file>.spec.ts`, not the `--` form, which runs every suite.
-      - After a dev-server restart, request `/admin/login` and `/news` once before e2e; the admin suite's `beforeAll` has a 30-second limit.
+      - After a dev-server restart, request `/admin/login`, `/articles`, `/news`, and `/admin/collections/articles/create` once before e2e; the admin suite's `beforeAll` has a 30-second limit, and the article block editor is a lazily compiled Next chunk whose first render takes over a minute cold and about a second once warm.
+      - "Size timeouts to the measured failure: give the cold first block render an explicit expect timeout of up to ~180 s, keep other waits short, and do not raise a whole-suite timeout above ~240 s; two 600 s runs were spent waiting for selectors that never existed."
+      - "Dump admin `outerHTML` with a throwaway spec (~20 s) before asserting on unfamiliar markup; do not guess selectors inside a long-lived suite."
+      - "Payload `admin.condition` on group or array children receives the sibling object as its second argument; `(data) => data.enabled` never reveals the fields."
+      - "Playwright can beat admin hydration: a checkbox toggled before the form hydrates leaves React state unchanged. Re-toggle inside `expect(async () => …).toPass()` instead of adding sleeps."
+      - "Upload relationship fields have no `input[type=file]`; select with `.upload__listToggler` → `.drawer__content tbody tr` → `button.default-cell__first-cell` and assert the filename link."
+      - "Host-run uploads land in `./media` while the Compose app serves the `media` named volume; upload through the running app's REST API when a test or screenshot must render the file."
       - "Keep Vitest `fileParallelism: false` and Playwright `workers: 1`; the suites share one database and race on Payload schema pushes and published rows."
   archive:
     guidance:
