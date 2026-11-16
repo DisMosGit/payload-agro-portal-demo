@@ -8,5 +8,8 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     include: ['tests/int/**/*.int.spec.ts'],
+    // Every suite boots Payload, and the Postgres adapter pushes the dev schema
+    // on boot. Parallel files race on the same DDL, so run files one at a time.
+    fileParallelism: false,
   },
 })
