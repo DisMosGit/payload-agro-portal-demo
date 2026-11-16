@@ -18,8 +18,10 @@ rules:
     - State whether each content requirement is read-only for unauthenticated users.
   design:
     - Do not choose a map provider; list it under Open Questions until one is decided.
+    - In Payload 3.93, `slugField()`'s admin input starts locked and its hook does not fill the slug before required validation; when a design uses it, plan an explicit slug or a `beforeValidate` guard.
   tasks:
     - Use one task group per collection or public section touched, not one per layer.
+    - Use positional path filters, not `--`, in verification commands (`pnpm test:e2e tests/e2e/<file>.spec.ts`), and state prerequisites such as the Playwright browser install and the dev-server restart.
 
 operations:
   apply:
@@ -27,6 +29,11 @@ operations:
       - Regenerate payload-types.ts and importMap.js after collection or admin-component changes; never hand-edit them.
       - Keep tsc --noEmit, pnpm lint, and pnpm test:int green for collection or access-control changes.
       - Run pnpm test:e2e for frontend changes.
+      - Install the Playwright browser once with `pnpm exec playwright install chromium`.
+      - Restart the dev server after changing `payload.config.ts` or a collection config; Next hot reload does not re-register collections.
+      - Run one suite with a positional path such as `pnpm test:e2e tests/e2e/<file>.spec.ts`, not the `--` form, which runs every suite.
+      - After a dev-server restart, request `/admin/login` and `/news` once before e2e; the admin suite's `beforeAll` has a 30-second limit.
+      - "Keep Vitest `fileParallelism: false` and Playwright `workers: 1`; the suites share one database and race on Payload schema pushes and published rows."
   archive:
     guidance:
       - Run openspec validate before archiving.
